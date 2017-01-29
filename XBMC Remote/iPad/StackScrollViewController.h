@@ -73,6 +73,8 @@
 - (void)enablePanGestureRecognizer;
 - (void)disablePanGestureRecognizer:(UIView *)fallbackView;
 - (void) addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView;
+- (void)addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView isStacked:(BOOL)isStacked;
+
 - (void)bounceBack:(NSString*)animationID finished:(NSNumber*)finished context:(void*)context;
 
 @property (nonatomic, retain) UIView* slideViews;

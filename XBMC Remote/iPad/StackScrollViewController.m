@@ -922,6 +922,10 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 }
 
 - (void)addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView{
+    [self addViewInSlider:controller invokeByController:invokeByController isStackStartView:isStackStartView isStacked:FALSE];
+}
+
+- (void)addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView isStacked:(BOOL)isStacked{
     float animX=0;
 	if (isStackStartView) {
         NSInteger numViews=[[slideViews subviews]count];
@@ -1008,19 +1012,22 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     shadow.tag = 2001;
     [controller.view addSubview:shadow];
     
-    shadowRect = CGRectMake(STACKSCROLL_WIDTH, 0.0f, 16.0f, self.view.frame.size.height);
-    UIImageView *shadowRight = [[UIImageView alloc] initWithFrame:shadowRect];
-    [shadowRight setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin];
-    [shadowRight setImage:[UIImage imageNamed:@"tableRight.png"]];
-    shadowRight.opaque = YES;
-    shadowRight.tag = 2002;
-    [controller.view addSubview:shadowRight];
-    
-    shadowRect = CGRectMake(-15.0f, -15.0f, STACKSCROLL_WIDTH + 30.0f, 15);
-    UIImageView *shadowUp = [[UIImageView alloc] initWithFrame:shadowRect];
-    [shadowUp setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-    [shadowUp setImage:[UIImage imageNamed:@"stackScrollUpShadow"]];
-    [controller.view insertSubview:shadowUp atIndex:1];
+    if(isStacked) {
+        
+        shadowRect = CGRectMake(STACKSCROLL_WIDTH, 0.0f, 16.0f, self.view.frame.size.height);
+        UIImageView *shadowRight = [[UIImageView alloc] initWithFrame:shadowRect];
+        [shadowRight setAutoresizingMask:UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin];
+        [shadowRight setImage:[UIImage imageNamed:@"tableRight.png"]];
+        shadowRight.opaque = YES;
+        shadowRight.tag = 2002;
+        [controller.view addSubview:shadowRight];
+        
+        shadowRect = CGRectMake(-15.0f, -15.0f, STACKSCROLL_WIDTH + 30.0f, 15);
+        UIImageView *shadowUp = [[UIImageView alloc] initWithFrame:shadowRect];
+        [shadowUp setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
+        [shadowUp setImage:[UIImage imageNamed:@"stackScrollUpShadow"]];
+        [controller.view insertSubview:shadowUp atIndex:1];
+    }
     
 	[slideViews addSubview:[controller view]];
     if ([[slideViews subviews] count] > 0) {

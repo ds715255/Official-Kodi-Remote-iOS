@@ -170,6 +170,7 @@ NSMutableArray *hostRightMenuItems;
     mainMenu *item6 = [[mainMenu alloc] init];
     mainMenu *item7 = [[mainMenu alloc] init];
     mainMenu *item8 = [[mainMenu alloc] init];
+    mainMenu *item9 = [[mainMenu alloc] init];
 
     item1.subItem = [[mainMenu alloc] init];
     item1.subItem.subItem = [[mainMenu alloc] init];
@@ -3515,6 +3516,11 @@ NSMutableArray *hostRightMenuItems;
     item6.icon = @"icon_home_remote_alt";
     item6.family = 3;
     
+#pragma mark - YouTube
+    item9.mainLabel = NSLocalizedString(@"YouTube", nil);
+    item9.upperLabel = NSLocalizedString(@"Navigate", nil);
+    item9.family = 5;
+    
 #pragma mark - XBMC Server Management
     item7.mainLabel = NSLocalizedString(@"XBMC Server", nil);
     item7.upperLabel = @"";
@@ -4229,6 +4235,7 @@ NSMutableArray *hostRightMenuItems;
         [mainMenuItems addObject:item4];
         [mainMenuItems addObject:item8];
         [mainMenuItems addObject:item6];
+        [mainMenuItems addObject:item9];
         self.windowController = [[ViewControllerIPad alloc] initWithNibName:@"ViewControllerIPad" bundle:nil];
         self.windowController.mainMenu = mainMenuItems;
         self.window.rootViewController = self.windowController;

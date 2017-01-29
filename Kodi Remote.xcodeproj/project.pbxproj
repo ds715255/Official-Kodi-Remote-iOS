@@ -860,6 +860,9 @@
 		1A6742EF1684848800E8D5AF /* button_now_playing_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A6742F11684848800E8D5AF /* button_now_playing_empty.png */; };
 		1A6742F31685584B00E8D5AF /* button_now_playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A6742F51685584B00E8D5AF /* button_now_playing.png */; };
 		1A9786C01683D87800B4F3F8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A9786C21683D87800B4F3F8 /* Localizable.strings */; };
+		652211EF1E3E0C4F00208059 /* YouTubeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 652211ED1E3E0C4F00208059 /* YouTubeController.m */; };
+		652211F01E3E0C4F00208059 /* YouTubeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 652211EE1E3E0C4F00208059 /* YouTubeController.xib */; };
+		652211F21E3E153800208059 /* ajax_handler.js in Resources */ = {isa = PBXBuildFile; fileRef = 652211F11E3E153800208059 /* ajax_handler.js */; };
 		8E1B3AF516EAABA00089A043 /* remote quick help@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B3AF716EAABA00089A043 /* remote quick help@2x.png */; };
 		8E1B3AF916EAABA80089A043 /* remote quick help_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B3AFB16EAABA80089A043 /* remote quick help_ipad@2x.png */; };
 		8E1B3AFC16EAABAD0089A043 /* remote quick help_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B3AFE16EAABAD0089A043 /* remote quick help_ipad.png */; };
@@ -1845,6 +1848,10 @@
 		1A9786AF1683CEEA00B4F3F8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1A9786C11683D87800B4F3F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1A9786C31683D8E900B4F3F8 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		652211EC1E3E0C4F00208059 /* YouTubeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YouTubeController.h; sourceTree = "<group>"; };
+		652211ED1E3E0C4F00208059 /* YouTubeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YouTubeController.m; sourceTree = "<group>"; };
+		652211EE1E3E0C4F00208059 /* YouTubeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YouTubeController.xib; sourceTree = "<group>"; };
+		652211F11E3E153800208059 /* ajax_handler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ajax_handler.js; sourceTree = "<group>"; };
 		8E1B3AF616EAABA00089A043 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/remote quick help@2x.png"; sourceTree = "<group>"; };
 		8E1B3AFA16EAABA80089A043 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/remote quick help_ipad@2x.png"; sourceTree = "<group>"; };
 		8E1B3AFD16EAABAD0089A043 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/remote quick help_ipad.png"; sourceTree = "<group>"; };
@@ -2016,6 +2023,8 @@
 				0F8E308716FA536C009DEE72 /* PosterHeaderView.m */,
 				0F284A5016F63C9A00AFC1EF /* PosterLabel.h */,
 				0F284A5116F63C9A00AFC1EF /* PosterLabel.m */,
+				652211EC1E3E0C4F00208059 /* YouTubeController.h */,
+				652211ED1E3E0C4F00208059 /* YouTubeController.m */,
 			);
 			name = iPhone;
 			sourceTree = "<group>";
@@ -2023,6 +2032,7 @@
 		0F175F14154D45C200C1C61F /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				652211EE1E3E0C4F00208059 /* YouTubeController.xib */,
 				0F6234E7192808120024FEFA /* cellView.xib */,
 				0F6234EB19280B120024FEFA /* rightCellView.xib */,
 				0FB16163151F156A001BA2D4 /* jsonDataCell.xib */,
@@ -2257,6 +2267,7 @@
 				0F554906151D1187007E633F /* main.m */,
 				0F554908151D1187007E633F /* Kodi Remote-Prefix.pch */,
 				1A9786C21683D87800B4F3F8 /* Localizable.strings */,
+				652211F11E3E153800208059 /* ajax_handler.js */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3141,7 +3152,7 @@
 				ORGANIZATIONNAME = "joethefox inc.";
 				TargetAttributes = {
 					0F5548F5151D1187007E633F = {
-						DevelopmentTeam = KWZL4ZWD6C;
+						DevelopmentTeam = DN4P275GVM;
 					};
 				};
 			};
@@ -3251,6 +3262,7 @@
 				0F554B43151D13CA007E633F /* st_tv_on@2x.png in Resources */,
 				0F554B45151D13CA007E633F /* st_va_off@2x.png in Resources */,
 				0F554B46151D13CA007E633F /* st_va_on@2x.png in Resources */,
+				652211F21E3E153800208059 /* ajax_handler.js in Resources */,
 				0F554B48151D13CA007E633F /* stars_0@2x.png in Resources */,
 				0F554B49151D13CA007E633F /* stars_10@2x.png in Resources */,
 				0F554B4A151D13CA007E633F /* stars_1@2x.png in Resources */,
@@ -3934,6 +3946,7 @@
 				0FCCFF5F16D0EEF8008EBABE /* icon_not_watched.png in Resources */,
 				0F3434EC18FAA54600840E27 /* nocover_timers_wall.png in Resources */,
 				0FCCFF6016D0EEF8008EBABE /* icon_watched.png in Resources */,
+				652211F01E3E0C4F00208059 /* YouTubeController.xib in Resources */,
 				0F94B20316E239C300485E8E /* coverbox_back_tvshows@2x.png in Resources */,
 				0F9D0ACC19F27A0C00B95CD5 /* bottom_logo_up_iphone@3x.png in Resources */,
 				0F94B20516E239CC00485E8E /* coverbox_back_tvshows.png in Resources */,
@@ -3984,6 +3997,7 @@
 				0F74772E151DD77400EF78AD /* NowPlaying.m in Sources */,
 				0F4AB81A1903DDCE005DEC5C /* RemoteControllerGestureZoneView.m in Sources */,
 				0F747734151DD91D00EF78AD /* RemoteController.m in Sources */,
+				652211EF1E3E0C4F00208059 /* YouTubeController.m in Sources */,
 				0F74776F151E5E8600EF78AD /* DSJSONRPC.m in Sources */,
 				0F747770151E5E8600EF78AD /* DSJSONRPCError.m in Sources */,
 				0F747771151E5E8600EF78AD /* JSONKit.m in Sources */,
@@ -4293,6 +4307,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = DN4P275GVM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "XBMC Remote/Kodi Remote-Prefix.pch";
 				INFOPLIST_FILE = "XBMC Remote/Kodi Remote-Info.plist";
@@ -4302,7 +4317,7 @@
 					"-ObjC",
 					"-w",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "it.joethefox.XBMC-Remote";
+				PRODUCT_BUNDLE_IDENTIFIER = "de.danielsabel.XBMC-Remote";
 				PRODUCT_NAME = "Kodi Remote";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -4320,13 +4335,14 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = DN4P275GVM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "XBMC Remote/Kodi Remote-Prefix.pch";
 				INFOPLIST_FILE = "XBMC Remote/Kodi Remote-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = "it.joethefox.XBMC-Remote";
+				PRODUCT_BUNDLE_IDENTIFIER = "de.danielsabel.XBMC-Remote";
 				PRODUCT_NAME = "Kodi Remote";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";

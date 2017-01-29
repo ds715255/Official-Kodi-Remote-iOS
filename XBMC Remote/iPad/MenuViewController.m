@@ -40,10 +40,17 @@
 #import "MenuViewController.h"
 #import "AppDelegate.h"
 #import "ViewControllerIPad.h"
+#import "YouTubeController.h"
 #import "StackScrollViewController.h"
 #import "mainMenu.h"
 #import "DetailViewController.h"
 #import "RemoteController.h"
+
+@interface MenuViewController() {
+    YouTubeController *youtubeController;
+}
+
+@end
 
 @implementation MenuViewController
 @synthesize tableView = _tableView;
@@ -328,6 +335,16 @@
             [remoteController.view setFrame:CGRectMake(0, 0, STACKSCROLL_WIDTH, self.view.frame.size.height)];
             [[AppDelegate instance].windowController.stackScrollViewController addViewInSlider:remoteController invokeByController:self isStackStartView:TRUE];
             [[AppDelegate instance].windowController.stackScrollViewController disablePanGestureRecognizer:remoteController.panFallbackImageView];
+        }
+        else if(item.family == 5) {
+            if(youtubeController == nil) {
+                    youtubeController = [[YouTubeController alloc] initWithNibName:@"YouTubeController" bundle:nil];
+            }
+            CGSize size = [AppDelegate instance].windowController.stackScrollViewController.view.frame.size;
+            [youtubeController.view setFrame:CGRectMake(0, 0, size.width, size.height)];
+            [[AppDelegate instance].windowController.stackScrollViewController addViewInSlider:youtubeController
+                                            invokeByController:self isStackStartView:TRUE isStacked:FALSE];
+            
         }
         lastSelected = (int)indexPath.row;
     }

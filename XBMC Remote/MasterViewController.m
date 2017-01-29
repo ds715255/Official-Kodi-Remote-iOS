@@ -226,6 +226,7 @@
         object = self.detailViewController;
         hideBottonLine = YES;
     }
+    
     navController = nil;
     navController = [[CustomNavigationController alloc] initWithRootViewController:object];
     UIImage* menuImg = [UIImage imageNamed:@"button_menu"];
