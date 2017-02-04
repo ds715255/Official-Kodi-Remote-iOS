@@ -26,14 +26,46 @@
     [super viewDidLoad];
     jsonRPC = [[DSJSONRPC alloc] initWithServiceEndpoint:[AppDelegate instance].getServerJSONEndPoint andHTTPHeaders:[AppDelegate instance].getServerHTTPHeaders];
     
+    
     self->JSHandler = [NSString stringWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"ajax_handler" withExtension:@"js"] encoding:NSUTF8StringEncoding error:nil];
     
-    // Do any additional setup after loading the view from its nib.
-    self.youtubeweb.delegate = self;
+    
+    WKWebViewConfiguration *webConfig = [[WKWebViewConfiguration alloc]init];
+    WKUserContentController *userController = [[WKUserContentController alloc]init];
+    WKUserScript *userScript = [[WKUserScript alloc]initWithSource:self->JSHandler injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+    [userController addUserScript:userScript];
+    [userController addScriptMessageHandler:self name:@"ajaxCall"];
+    webConfig.userContentController = userController;
+    webConfig.allowsInlineMediaPlayback = NO;
+    webConfig.requiresUserActionForMediaPlayback = YES;
+    
+    youtubeweb = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, _youtubewebhost.frame.size.width, _youtubewebhost.frame.size.height) configuration:webConfig];
+    
+    [_youtubewebhost addSubview:youtubeweb];
+    [self observe];
+    
+    youtubeweb.navigationDelegate = self;
     
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL: [NSURL URLWithString: @"https://www.youtube.com"] cachePolicy: NSURLRequestUseProtocolCachePolicy timeoutInterval: 30000];
-    [self.youtubeweb loadRequest: request];
+    [youtubeweb loadRequest: request];
     
+}
+
+-(void)observe {
+    [_youtubewebhost addObserver:self forKeyPath:@"frame" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"bounds" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"transform" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"position" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"zPosition" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"anchorPoint" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"anchorPointZ" options:0 context:NULL];
+    [_youtubewebhost.layer addObserver:self forKeyPath:@"frame" options:0 context:NULL];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    youtubeweb.frame = CGRectMake(0, 0, _youtubewebhost.frame.size.width, _youtubewebhost.frame.size.height);
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,32 +73,16 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)onGoBack:(id)sender {
-    if(self.youtubeweb.canGoBack) {
-        [self.youtubeweb goBack];
+    if(youtubeweb.canGoBack) {
+        [youtubeweb goBack];
     }
     
 }
 - (IBAction)onRefresh:(id)sender {
-    [self.youtubeweb reload];
+    [youtubeweb reload];
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-     [webView stringByEvaluatingJavaScriptFromString:self->JSHandler];
-}
-
--(void)webViewDidFinishLoad:(UIWebView *)webView {
-    [webView stringByEvaluatingJavaScriptFromString:@""];
-}
 
 +(NSDictionary *)parseQueryString:(NSString *)query {
     NSMutableDictionary *queryStringDictionary = [[NSMutableDictionary alloc] init];
@@ -89,30 +105,24 @@
     [jsonRPC callMethod:@"Player.Open" withParameters:params onCompletion:nil];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+-(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 {
-    if ([[[request URL] scheme] isEqual:CocoaJSHandler] || [request.URL.absoluteString containsString:@"www.youtube.com/watch?"]) {
-        NSString *requestedURLString = [[[request URL] absoluteString] substringFromIndex:[CocoaJSHandler length] + 3];
-
+    if([message.name isEqualToString:@"ajaxCall"]) {
+        // The message.body contains the object being posted back
+        NSString *requestedURLString = [message.body valueForKey:@"url"];
         NSLog(@"ajax request: %@", requestedURLString);
 
         if([requestedURLString containsString:@"www.youtube.com/watch?"]) {
-            NSDictionary *args = [YouTubeController parseQueryString:request.URL.query];
+            NSURL *url = [[NSURL alloc] initWithString:requestedURLString];
+            NSDictionary *args = [YouTubeController parseQueryString:url.query];
             NSString *video_id = [args valueForKey:@"v"];
             NSLog(@"Playing YouTube video %@", video_id);
             [self openVideoUrl:video_id];
-            return YES;
+            
         }
-        
     }
-    
-    // keep us on youtube.com and don't follow ad links (not very safe but ok for now)
-    if(![request.URL.host containsString:@".youtube."] &&
-       ![request.URL.host containsString:@".google."]) {
-        return YES;
-    }
-    return YES;
 }
+
 
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {

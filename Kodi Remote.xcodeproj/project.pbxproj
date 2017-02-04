@@ -863,6 +863,7 @@
 		652211EF1E3E0C4F00208059 /* YouTubeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 652211ED1E3E0C4F00208059 /* YouTubeController.m */; };
 		652211F01E3E0C4F00208059 /* YouTubeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 652211EE1E3E0C4F00208059 /* YouTubeController.xib */; };
 		652211F21E3E153800208059 /* ajax_handler.js in Resources */ = {isa = PBXBuildFile; fileRef = 652211F11E3E153800208059 /* ajax_handler.js */; };
+		65ACDC091E45D7E600C3DDB3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65ACDC081E45D7E600C3DDB3 /* WebKit.framework */; };
 		8E1B3AF516EAABA00089A043 /* remote quick help@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B3AF716EAABA00089A043 /* remote quick help@2x.png */; };
 		8E1B3AF916EAABA80089A043 /* remote quick help_ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B3AFB16EAABA80089A043 /* remote quick help_ipad@2x.png */; };
 		8E1B3AFC16EAABAD0089A043 /* remote quick help_ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E1B3AFE16EAABAD0089A043 /* remote quick help_ipad.png */; };
@@ -1852,6 +1853,7 @@
 		652211ED1E3E0C4F00208059 /* YouTubeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YouTubeController.m; sourceTree = "<group>"; };
 		652211EE1E3E0C4F00208059 /* YouTubeController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YouTubeController.xib; sourceTree = "<group>"; };
 		652211F11E3E153800208059 /* ajax_handler.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = ajax_handler.js; sourceTree = "<group>"; };
+		65ACDC081E45D7E600C3DDB3 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		8E1B3AF616EAABA00089A043 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/remote quick help@2x.png"; sourceTree = "<group>"; };
 		8E1B3AFA16EAABA80089A043 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/remote quick help_ipad@2x.png"; sourceTree = "<group>"; };
 		8E1B3AFD16EAABAD0089A043 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/remote quick help_ipad.png"; sourceTree = "<group>"; };
@@ -1883,6 +1885,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65ACDC091E45D7E600C3DDB3 /* WebKit.framework in Frameworks */,
 				0F32093016FE193400636BA2 /* ImageIO.framework in Frameworks */,
 				0FB8598615FF9ED10070F324 /* AVFoundation.framework in Frameworks */,
 				0F49885D152879FF0041DA92 /* QuartzCore.framework in Frameworks */,
@@ -2215,6 +2218,7 @@
 		0F5548F9151D1187007E633F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65ACDC081E45D7E600C3DDB3 /* WebKit.framework */,
 				0F32092F16FE193400636BA2 /* ImageIO.framework */,
 				0FB8598515FF9ED10070F324 /* AVFoundation.framework */,
 				0F49885C152879FF0041DA92 /* QuartzCore.framework */,

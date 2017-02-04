@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 #import "DSJSONRPC.h"
 
-@interface YouTubeController : UIViewController<UIWebViewDelegate> {
+@interface YouTubeController : UIViewController<WKNavigationDelegate, WKScriptMessageHandler> {
      NSString *JSHandler;
     DSJSONRPC *jsonRPC;
+    WKWebView *youtubeweb;
 }
-@property (weak, nonatomic) IBOutlet UIWebView *youtubeweb;
+@property (weak, nonatomic) IBOutlet UIView *youtubewebhost;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *gobackButton;
 

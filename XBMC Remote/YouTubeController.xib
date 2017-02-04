@@ -14,7 +14,7 @@
                 <outlet property="gobackButton" destination="g7l-Wa-JQe" id="i4h-X4-hg9"/>
                 <outlet property="refreshButton" destination="gqL-Xe-0dY" id="uy4-Qz-9s2"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
-                <outlet property="youtubeweb" destination="Czi-y1-5gQ" id="Huw-tB-AMw"/>
+                <outlet property="youtubewebhost" destination="IcN-tQ-YSk" id="XuF-KM-IsC"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -41,19 +41,19 @@
                         </navigationItem>
                     </items>
                 </navigationBar>
-                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Czi-y1-5gQ">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IcN-tQ-YSk">
                     <rect key="frame" x="0.0" y="44" width="1024" height="1322"/>
-                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                </webView>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="Czi-y1-5gQ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="483-1O-X20"/>
+                <constraint firstItem="IcN-tQ-YSk" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3w2-pU-cpZ"/>
                 <constraint firstItem="CEW-O9-gCp" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Dh1-Gv-qf3"/>
-                <constraint firstAttribute="trailing" secondItem="Czi-y1-5gQ" secondAttribute="trailing" id="FDs-Bl-0pE"/>
-                <constraint firstItem="Czi-y1-5gQ" firstAttribute="top" secondItem="CEW-O9-gCp" secondAttribute="bottom" id="RAw-kJ-utU"/>
                 <constraint firstAttribute="trailing" secondItem="CEW-O9-gCp" secondAttribute="trailing" id="Rxz-6f-nVC"/>
-                <constraint firstAttribute="bottom" secondItem="Czi-y1-5gQ" secondAttribute="bottom" id="Xw7-gN-ADR"/>
+                <constraint firstAttribute="bottom" secondItem="IcN-tQ-YSk" secondAttribute="bottom" id="UuZ-iy-Dez"/>
+                <constraint firstAttribute="trailing" secondItem="IcN-tQ-YSk" secondAttribute="trailing" id="dHA-kf-bfR"/>
+                <constraint firstItem="IcN-tQ-YSk" firstAttribute="top" secondItem="CEW-O9-gCp" secondAttribute="bottom" id="k8c-ty-0kS"/>
                 <constraint firstItem="CEW-O9-gCp" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ueg-Kr-VZ3"/>
             </constraints>
             <point key="canvasLocation" x="26.5" y="52.5"/>
