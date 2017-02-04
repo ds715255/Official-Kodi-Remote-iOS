@@ -4313,13 +4313,8 @@ static NSString * AFBase64EncodedStringFromString(NSString *string) {
 
 -(void)sendWOL:(NSString *)MAC withPort:(NSInteger)WOLport {
     CFSocketRef     WOLsocket;
-    NSLog(@"MAC = %@", MAC);
     WOLsocket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_DGRAM, IPPROTO_UDP, 0, NULL, NULL);
-    if (!WOLsocket) {
-        NSLog(@"CFSocketCreate failed!!!");
-    } else {
-        NSLog(@"Socket created.");
-        
+    if (WOLsocket) {
         int desc = -1;
         desc = CFSocketGetNative(WOLsocket);
         int yes = -1;
@@ -4371,8 +4366,6 @@ static NSString * AFBase64EncodedStringFromString(NSString *string) {
         
         if (CFSocketSendData_error) {
             NSLog(@"CFSocketSendData error: %li", CFSocketSendData_error);
-        } else {
-            NSLog(@"Message sent");
         }
     }
 }
@@ -4485,6 +4478,7 @@ int Wake_on_LAN(char *ip_broadcast,const char *wake_mac){
     NSString *fullNamespace = @"ImageCache"; 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *diskCachePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:fullNamespace];
+    [[NSFileManager defaultManager] removeItemAtPath:diskCachePath error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:[paths objectAtIndex:0] error:nil];
     
     // TO BE CHANGED!!!

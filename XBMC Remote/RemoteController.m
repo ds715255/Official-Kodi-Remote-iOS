@@ -680,8 +680,7 @@
 
     NSString *serverHTTP=[NSString stringWithFormat:@"http://%@%@@%@:%@/xbmcCmds/xbmcHttp?command=%@", obj.serverUser, userPassword, obj.serverIP, obj.serverPort, command];
     NSURL *url = [NSURL  URLWithString:serverHTTP];
-    NSString *requestANS = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];  
-    requestANS=nil;
+    [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 }
 
 -(void)volumeInfo{
@@ -1204,6 +1203,7 @@ NSInteger buttonAction;
 #pragma mark - Life Cycle
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.slidingViewController.underRightViewController = nil;
         RightMenuViewController *rightMenuViewController = [[RightMenuViewController alloc] initWithNibName:@"RightMenuViewController" bundle:nil];
@@ -1270,6 +1270,7 @@ NSInteger buttonAction;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [self resetRemote];
 }
 
@@ -1331,14 +1332,12 @@ NSInteger buttonAction;
         rightSwipe.enabled = NO;
     }
     torchIsOn = NO;
-    NSString *torchIcon = @"torch";
     Class captureDeviceClass = NSClassFromString(@"AVCaptureDevice");
     if (captureDeviceClass != nil) {
         AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
         if ([device hasTorch] && [device hasFlash]){
             if ([device torchLevel] == YES){
                 torchIsOn = YES;
-                torchIcon = @"torch_on";
             }
         }
     }

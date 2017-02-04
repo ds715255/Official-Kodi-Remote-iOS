@@ -80,6 +80,24 @@
     return size;
 }
 
+-(void)setIsRecording:(BOOL)enable {
+    if (enable == YES) {
+        if (isRecordingImageView == nil) {
+            float dotSize = 8.0f;
+            isRecordingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(6.0f, 6.0f, dotSize, dotSize)];
+            [isRecordingImageView setImage:[UIImage imageNamed:@"button_timer"]];
+            [isRecordingImageView setContentMode:UIViewContentModeScaleToFill];
+            isRecordingImageView.tag = 104;
+            [isRecordingImageView setBackgroundColor:[UIColor clearColor]];
+            [self.contentView addSubview:isRecordingImageView];
+        }
+        isRecordingImageView.hidden = NO;
+    }
+    else {
+        isRecordingImageView.hidden = YES;
+    }
+}
+
 -(void)setOverlayWatched:(BOOL)enable{
     if (enable == YES){
         if (overlayWatched == nil){

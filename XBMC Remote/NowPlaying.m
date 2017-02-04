@@ -226,8 +226,7 @@ float cellBarWidth=45;
         NSString *userPassword=[obj.serverPass isEqualToString:@""] ? @"" : [NSString stringWithFormat:@":%@", obj.serverPass];
         NSString *serverHTTP=[NSString stringWithFormat:@"http://%@%@@%@:%@/xbmcCmds/xbmcHttp?command=ExecBuiltIn&parameter=PlayerControl(Partymode('music'))", obj.serverUser, userPassword, obj.serverIP, obj.serverPort];
         NSURL *url = [NSURL  URLWithString:serverHTTP];
-        NSString *requestANS = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
-        requestANS=nil;
+        [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
         playerID = -1;
         selectedPlayerID = -1;
         [self createPlaylist:NO animTableView:YES];
@@ -947,8 +946,8 @@ int currentItemID;
                                      }
                                      else{
                                          [[SDImageCache sharedImageCache] queryDiskCacheForKey:stringURL done:^(UIImage *image, SDImageCacheType cacheType) {
-                                             UIImage *buttonImage = [self resizeImage:[UIImage imageNamed:@"coverbox_back.png"] width:76 height:66 padding:10];
                                              if (image!=nil){
+                                                 UIImage *buttonImage = nil;
                                                  if (enableJewel){
                                                      thumbnailView.image=image;
                                                      buttonImage=[self resizeImage:[self imageWithBorderFromImage:image] width:76 height:66 padding:10];
@@ -1178,7 +1177,6 @@ int currentItemID;
                                                  UITableViewScrollPosition position=UITableViewScrollPositionMiddle;
                                                  if (musicPartyMode)
                                                      position=UITableViewScrollPositionNone;
-                                                 selection = [playlistTableView indexPathForSelectedRow];
                                                  [playlistTableView selectRowAtIndexPath:newSelection animated:YES scrollPosition:position];
                                                  UITableViewCell *cell = [playlistTableView cellForRowAtIndexPath:newSelection];
                                                  UIView *timePlaying=(UIView*) [cell viewWithTag:5];
@@ -1186,7 +1184,6 @@ int currentItemID;
                                                      [self fadeView:timePlaying hidden:NO];
                                                  storeSelection=newSelection;
                                                  lastSelected=playlistPosition;
-                                                 selection = [playlistTableView indexPathForSelectedRow];
                                              }
                                          }
                                          else {
@@ -1559,7 +1556,7 @@ int currentItemID;
            }];
 }
 
--(void)showPlaylistTable{    
+-(void)showPlaylistTable{
     numResults = (int)[playlistData count];
     if (numResults==0)
         [self alphaView:noFoundView AnimDuration:0.2 Alpha:1.0];
@@ -1764,11 +1761,9 @@ int currentItemID;
                      fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanartPath stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
                  }
                  NSString *filetype=@"";
-                 NSString *type=@"";
                  
                  if ([videoLibraryMovieDetail objectForKey:@"filetype"]!=nil){
                      filetype=[videoLibraryMovieDetail objectForKey:@"filetype"];
-                     type=[videoLibraryMovieDetail objectForKey:@"type"];;
                      if ([filetype isEqualToString:@"directory"]){
                          stringURL=@"nocover_filemode.png";
                      }
@@ -2843,6 +2838,7 @@ int currentItemID;
 #pragma mark - Life Cycle
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         if (self.slidingViewController.panGesture != nil) {
             [self.navigationController.view addGestureRecognizer:self.slidingViewController.panGesture];
@@ -2916,6 +2912,11 @@ int currentItemID;
                                              selector: @selector(disableInteractivePopGestureRecognizer:)
                                                  name: @"ECSlidingViewTopDidReset"
                                                object: nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self
+                                             selector: @selector(connectionSuccess:)
+                                                 name: @"XBMCServerConnectionSuccess"
+                                               object: nil];
 
     // TRICK TO FORCE VIEW IN PORTRAIT EVEN IF ROOT NAVIGATION WAS LANDSCAPE
 //    UIViewController *c = [[UIViewController alloc]init];
@@ -2945,6 +2946,7 @@ int currentItemID;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [self handleXBMCPlaylistHasChanged:nil];
     [self playbackInfo];
     updateProgressBar = YES;
@@ -2979,6 +2981,7 @@ int currentItemID;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [timer invalidate];
     currentItemID = -1;
     self.slidingViewController.panGesture.delegate = nil;
@@ -2986,6 +2989,7 @@ int currentItemID;
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     [self AnimTable:playlistTableView AnimDuration:0.3 Alpha:1.0 XPos:slideFrom];
     songDetailsView.alpha = 0;
     [playlistTableView setEditing:NO animated:YES];
@@ -3107,6 +3111,14 @@ int currentItemID;
         [self setIpadInterface:toolbarAlpha];
     }
     playlistData = [[NSMutableArray alloc] init ];
+}
+
+- (void)connectionSuccess:(NSNotification *)note {
+    SDWebImageDownloader *manager = [SDWebImageManager sharedManager].imageDownloader;
+    NSDictionary *httpHeaders = [AppDelegate instance].getServerHTTPHeaders;
+    if ([httpHeaders objectForKey:@"Authorization"] != nil){
+        [manager setValue:[httpHeaders objectForKey:@"Authorization"] forHTTPHeaderField:@"Authorization"];
+    }
 }
 
 -(void)handleShakeNotification{

@@ -110,12 +110,10 @@ NSOutputStream	*outStream;
                             NSDictionary *notification = [NSJSONSerialization JSONObjectWithData:output options:kNilOptions error:&parseError];
                             if (parseError == nil){
                                 NSString *method = @"";
-                                NSString *params = @"";
                                 NSDictionary *paramsDict;
                                 if (((NSNull *)[notification objectForKey:@"method"] != [NSNull null])){
                                         method = [notification objectForKey:@"method"];
                                     if (((NSNull *)[notification objectForKey:@"params"] != [NSNull null])){
-                                        params = [notification objectForKey:@"params"];
                                         paramsDict = [NSDictionary dictionaryWithObject:[notification objectForKey:@"params"] forKey:@"params"];
                                     }
                                     [[NSNotificationCenter defaultCenter] postNotificationName:method object:nil userInfo:paramsDict];
@@ -139,7 +137,6 @@ NSOutputStream	*outStream;
             [theStream close];
             [theStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
             [theStream setDelegate:nil];
-            theStream = nil;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"tcpJSONRPCConnectionClosed" object:nil userInfo:nil];
 
             break;

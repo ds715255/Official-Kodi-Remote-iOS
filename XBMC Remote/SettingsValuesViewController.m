@@ -201,10 +201,8 @@
 -(void)handleLongPress:(UILongPressGestureRecognizer *)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         CGPoint p;
-        CGPoint selectedPoint;
         NSIndexPath *indexPath = nil;
         p = [gestureRecognizer locationInView:_tableView];
-        selectedPoint=[gestureRecognizer locationInView:self.view];
         indexPath = [_tableView indexPathForRowAtPoint:p];
         if (indexPath != nil){
             longPressRow = indexPath;
@@ -844,6 +842,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     if ([self presentingViewController] != nil) {
         UIBarButtonItem * doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissAddAction:)];
         self.navigationItem.rightBarButtonItem = doneButton;
@@ -860,6 +859,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     if (xbmcSetting == cList){
         [self scrollTableRow:settingOptions];
     }

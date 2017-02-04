@@ -181,9 +181,9 @@
     NSIndexPath *indexPath = [parameters objectForKey:@"indexPath"];
     UITableView *tableView = [parameters objectForKey:@"tableView"];
     NSMutableDictionary *item = [parameters objectForKey:@"item"];
-    NSMutableDictionary *channelEPG = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *channelEPG = nil;
     if ([channelid intValue] > 0){
-        NSMutableArray *retrievedEPG = [[NSMutableArray alloc] init];
+        NSMutableArray *retrievedEPG = nil;
         retrievedEPG = [self loadEPGFromMemory:channelid];
         channelEPG = [self parseEpgData:retrievedEPG];
         NSDictionary *epgparams = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -1343,11 +1343,16 @@
             [cell.posterLabel setText:[item objectForKey:@"label"]];
             cell.posterLabelFullscreen.hidden = YES;
         }
+        
         if ([[item objectForKey:@"filetype"] length]!=0 || [[item objectForKey:@"family"] isEqualToString:@"file"] || [[item objectForKey:@"family"] isEqualToString:@"genreid"]){
             if (![stringURL isEqualToString:@""]){
                 displayThumb=stringURL;
             }
         }
+        else if (channelListView) {
+            [cell setIsRecording:[[item objectForKey:@"isrecording"] boolValue]];
+        }
+        
         if (![stringURL isEqualToString:@""]){
             if ([[item objectForKey:@"family"] isEqualToString:@"channelid"]){
                 [cell.posterThumbnail setContentMode:UIViewContentModeScaleAspectFit];
@@ -1367,12 +1372,14 @@
             [cell.posterLabel setHidden:NO];
             [cell.labelImageView setHidden:NO];
         }
+        
         if ([playcount intValue]){
             [cell setOverlayWatched:YES];
         }
         else{
             [cell setOverlayWatched:NO];
         }
+        
         return cell;
     }
     else{
@@ -2005,7 +2012,7 @@ int originYear = 0;
             trackNumberLabel.minimumScaleFactor = (artistFontSize - 4) / artistFontSize;
             trackNumberLabel.tag = 101;
             [trackNumberLabel setHighlightedTextColor:[UIColor whiteColor]];
-            [cell addSubview:trackNumberLabel];
+            [cell.contentView addSubview:trackNumberLabel];
         }
         else if (channelGuideView){
             UILabel *programTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(4, 8, epgChannelTimeLabelWidth - 8, 12 + labelPadding)];
@@ -2016,34 +2023,34 @@ int originYear = 0;
             programTimeLabel.textAlignment = NSTextAlignmentCenter;
             programTimeLabel.tag = 102;
             [programTimeLabel setHighlightedTextColor:[UIColor whiteColor]];
-            [cell addSubview:programTimeLabel];
+            [cell.contentView addSubview:programTimeLabel];
             ProgressPieView *progressView = [[ProgressPieView alloc] initWithFrame:CGRectMake(4, programTimeLabel.frame.origin.y + programTimeLabel.frame.size.height + 7, epgChannelTimeLabelWidth - 8, epgChannelTimeLabelWidth - 8)];
             progressView.tag = 103;
             progressView.hidden = YES;
-            [cell addSubview:progressView];
+            [cell.contentView addSubview:progressView];
             
             UIImageView *hasTimer = [[UIImageView alloc] initWithFrame:CGRectMake((int)((2 + (epgChannelTimeLabelWidth - 8) - 6) / 2), programTimeLabel.frame.origin.y + programTimeLabel.frame.size.height + 14, 12, 12)];
             [hasTimer setImage:[UIImage imageNamed:@"button_timer"]];
             hasTimer.tag = 104;
             hasTimer.hidden = YES;
             [hasTimer setBackgroundColor:[UIColor clearColor]];
-            [cell addSubview:hasTimer];
+            [cell.contentView addSubview:hasTimer];
         }
         else if (channelListView) {
             float pieSize = 28.0f;
             ProgressPieView *progressView = [[ProgressPieView alloc] initWithFrame:CGRectMake(viewWidth - pieSize - 2.0f, 10.0f, pieSize, pieSize) color:[UIColor blackColor]];
             progressView.tag = 103;
             progressView.hidden = YES;
-            [cell addSubview:progressView];
+            [cell.contentView addSubview:progressView];
             
             float dotSize = 6.0f;
-            UIImageView *isRecording = [[UIImageView alloc] initWithFrame:CGRectMake(progressView.frame.origin.x + pieSize/2.0f - dotSize/2.0f, progressView.frame.origin.y + [progressView getPieRadius]/2.0f + [progressView getLineWidth] + 0.5f, dotSize, dotSize)];
-            [isRecording setImage:[UIImage imageNamed:@"button_timer"]];
-            [isRecording setContentMode:UIViewContentModeScaleToFill];
-            isRecording.tag = 104;
-            isRecording.hidden = YES;
-            [isRecording setBackgroundColor:[UIColor clearColor]];
-            [cell addSubview:isRecording];
+            UIImageView *isRecordingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(progressView.frame.origin.x + pieSize/2.0f - dotSize/2.0f, progressView.frame.origin.y + [progressView getPieRadius]/2.0f + [progressView getLineWidth] + 0.5f, dotSize, dotSize)];
+            [isRecordingImageView setImage:[UIImage imageNamed:@"button_timer"]];
+            [isRecordingImageView setContentMode:UIViewContentModeScaleToFill];
+            isRecordingImageView.tag = 104;
+            isRecordingImageView.hidden = YES;
+            [isRecordingImageView setBackgroundColor:[UIColor clearColor]];
+            [cell.contentView addSubview:isRecordingImageView];
         }
         [(UILabel*) [cell viewWithTag:1] setHighlightedTextColor:[UIColor blackColor]];
         [(UILabel*) [cell viewWithTag:2] setHighlightedTextColor:[UIColor blackColor]];
@@ -2143,8 +2150,8 @@ int originYear = 0;
             cell.urlImageView.frame = frame;
             ProgressPieView *progressView = (ProgressPieView*) [cell viewWithTag:103];
             progressView.hidden = YES;
-            UIImageView *isRecording = (UIImageView*) [cell viewWithTag:104];
-            isRecording.hidden = ![[item objectForKey:@"isrecording"] boolValue];
+            UIImageView *isRecordingImageView = (UIImageView*) [cell viewWithTag:104];
+            isRecordingImageView.hidden = ![[item objectForKey:@"isrecording"] boolValue];
             NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                     [NSNumber numberWithInteger:[[item objectForKey:@"channelid"] integerValue]], @"channelid",
                                     tableView, @"tableView",
@@ -2982,27 +2989,11 @@ NSIndexPath *selected;
         if ( [[item objectForKey:@"family"] isEqualToString:@"timerid"] && [AppDelegate instance].serverVersion < 17) {
             title = [NSString stringWithFormat:@"%@\n\n%@", title, NSLocalizedString(@"-- WARNING --\nKodi API prior Krypton (v17) don't allow timers editing. Use the Kodi GUI for adding, editing and removing timers. Thank you.", nil)];
             sheetActions = [NSArray arrayWithObjects: NSLocalizedString(@"Ok", nil), nil];
-            numActions = 1;
         }
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:title
-                                                            delegate:self
-                                                   cancelButtonTitle:nil
-                                              destructiveButtonTitle:nil
-                                                   otherButtonTitles:nil
-                                 ];
-        action.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-        
         id cell = [self getCell:indexPath];
-        UIImageView *isRecording = (UIImageView*) [cell viewWithTag:104];
-        
-        for (int i = 0; i < numActions; i++) {
-            title = [sheetActions objectAtIndex:i];
-            if ([title isEqualToString:NSLocalizedString(@"Record", nil)] && !isRecording.hidden) {
-                title = NSLocalizedString(@"Stop Recording", nil);
-            }
-            [action addButtonWithTitle:title];
-        }
-        action.cancelButtonIndex = [action addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+        UIImageView *isRecordingImageView = (UIImageView*) [cell viewWithTag:104];
+        BOOL isRecording = isRecordingImageView == nil ? false : !isRecordingImageView.hidden;
+        UIActionSheet *action = [self buildActionSheetOptions:title options:sheetActions item:item recording:isRecording];
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
             [action showInView:self.view];
         }
@@ -3064,27 +3055,16 @@ NSIndexPath *selected;
                     item = [[self.sections valueForKey:[self.sectionArray objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
                 }
                  sheetActions = [self checkMusicPlaylists:sheetActions item:item params:[self indexKeyedMutableDictionaryFromArray:[[self.detailItem mainParameters] objectAtIndex:choosedTab]]];
-                numActions=[sheetActions count];
 //                if ([[item objectForKey:@"filetype"] isEqualToString:@"directory"]) { // DOESN'T WORK AT THE MOMENT IN XBMC?????
 //                    return;
 //                }
                 NSString *title=[NSString stringWithFormat:@"%@\n%@", [item objectForKey:@"label"], [item objectForKey:@"genre"]];
-                UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:title
-                                                                    delegate:self
-                                                           cancelButtonTitle:nil
-                                                      destructiveButtonTitle:nil
-                                                           otherButtonTitles:nil
-                                         ];
-                action.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
                 id cell = [self getCell:selected];
-                UIImageView *isRecording = (UIImageView*) [cell viewWithTag:104];
-                for (int i = 0; i < numActions; i++) {
-                    NSString *title = [sheetActions objectAtIndex:i];
-                    if ([title isEqualToString:NSLocalizedString(@"Record", nil)] && !isRecording.hidden) {
-                        title = NSLocalizedString(@"Stop Recording", nil);
-                    }
-                    [action addButtonWithTitle:title];
-                }
+                
+                UIImageView *isRecordingImageView = (UIImageView*) [cell viewWithTag:104];
+                BOOL isRecording = isRecordingImageView == nil ? false : !isRecordingImageView.hidden;
+                UIActionSheet *action = [self buildActionSheetOptions:title options:sheetActions item:item recording:isRecording];
+                
                 if ([[item objectForKey:@"trailer"] isKindOfClass:[NSString class]]){
                     if ([[item objectForKey:@"trailer"] length]!=0 && [[[self.detailItem sheetActions] objectAtIndex:choosedTab] isKindOfClass:[NSMutableArray class]]){
                         [action addButtonWithTitle:NSLocalizedString(@"Play Trailer", nil)];
@@ -3104,7 +3084,6 @@ NSIndexPath *selected;
                         [[[self.detailItem sheetActions] objectAtIndex:choosedTab] addObject:actionString];
                     }
                 }
-                action.cancelButtonIndex = [action addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
                 if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
                     [action showInView:self.view];
                 }
@@ -3114,6 +3093,27 @@ NSIndexPath *selected;
             }
         }
     }
+}
+
+-(UIActionSheet *)buildActionSheetOptions:(NSString *)title options:(NSArray *)sheetActions item:(NSDictionary *)item recording:(BOOL)isRecording {
+    
+    UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:title
+                                                        delegate:self
+                                               cancelButtonTitle:nil
+                                          destructiveButtonTitle:nil
+                                               otherButtonTitles:nil
+                            ];
+    action.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    NSInteger numActions = [sheetActions count];
+    for (int i = 0; i < numActions; i++) {
+        title = [sheetActions objectAtIndex:i];
+        if ([title isEqualToString:NSLocalizedString(@"Record", nil)] && isRecording) {
+            title = NSLocalizedString(@"Stop Recording", nil);
+        }
+        [action addButtonWithTitle:title];
+    }
+    action.cancelButtonIndex = [action addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    return action;
 }
 
 -(void)markVideo:(NSMutableDictionary *)item indexPath:(NSIndexPath *)indexPath watched:(int)watched{
@@ -3819,7 +3819,9 @@ NSIndexPath *selected;
                                     [[parameters objectForKey:@"parameters"] objectForKey:@"media"], @"media",
                                     [[parameters objectForKey:@"parameters"] objectForKey:@"sort"],@"sort",
                                     [[parameters objectForKey:@"parameters"] objectForKey:@"file_properties"], @"file_properties",
-                                    nil], @"parameters", [parameters objectForKey:@"label"], @"label", @"nocover_filemode.png", @"defaultThumb", filemodeRowHeight, @"rowHeight", filemodeThumbWidth, @"thumbWidth",
+                                    nil], @"parameters",
+                                   libraryRowHeight, @"rowHeight", libraryThumbWidth, @"thumbWidth",
+                                   [parameters objectForKey:@"label"], @"label", @"nocover_filemode.png", @"defaultThumb", filemodeRowHeight, @"rowHeight", filemodeThumbWidth, @"thumbWidth",
                                    [NSDictionary dictionaryWithDictionary:[parameters objectForKey:@"itemSizes"]], @"itemSizes",
                                    [NSString stringWithFormat:@"%d",[[parameters objectForKey:@"enableCollectionView"] boolValue]], @"enableCollectionView",
                                    @"Files.GetDirectory", @"exploreCommand",
@@ -3964,7 +3966,7 @@ NSIndexPath *selected;
         float total_seconds = [endtime timeIntervalSince1970] - [starttime timeIntervalSince1970];
         float elapsed_seconds = [[NSDate date] timeIntervalSince1970] - [starttime timeIntervalSince1970];
         float percent_elapsed = (elapsed_seconds/total_seconds) * 100.0f;
-        if (percent_elapsed < 0 || percent_elapsed >= 100) {
+        if (percent_elapsed < 0) {
             itemid = [NSNumber numberWithInt:[[item objectForKey:@"broadcastid"] intValue]];
             storeBroadcastid = itemid;
             storeChannelid = [NSNumber numberWithInteger:0];
@@ -4003,8 +4005,8 @@ NSIndexPath *selected;
                    }
                }
                if (error==nil && methodError==nil) {
-                   UIImageView *isRecording = (UIImageView*) [cell viewWithTag:104];
-                   isRecording.hidden = !isRecording.hidden;
+                   UIImageView *isRecordingImageView = (UIImageView*) [cell viewWithTag:104];
+                   isRecordingImageView.hidden = !isRecordingImageView.hidden;
                    NSNumber *status = [NSNumber numberWithBool:![[item objectForKey:@"isrecording"] boolValue]];
                    if ([[item objectForKey:@"broadcastid"] intValue] > 0) {
                        status = [NSNumber numberWithBool:![[item objectForKey:@"hastimer"] boolValue]];
@@ -4586,11 +4588,8 @@ NSIndexPath *selected;
                      fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanartPath stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
                  }
                  NSString *filetype=@"";
-                 NSString *type=@"";
-                 
                  if ([videoLibraryMovieDetail objectForKey:@"filetype"]!=nil){
                      filetype=[videoLibraryMovieDetail objectForKey:@"filetype"];
-                     type=[videoLibraryMovieDetail objectForKey:@"type"];;
                      if ([filetype isEqualToString:@"directory"]){
                          stringURL=@"nocover_filemode.png";
                      }
@@ -4843,11 +4842,8 @@ NSIndexPath *selected;
                              fanartURL = [NSString stringWithFormat:@"http://%@%@", serverURL, [fanartPath stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding]];
                          }
                          NSString *filetype=@"";
-                         NSString *type=@"";
-                         
                          if ([[videoLibraryMovies objectAtIndex:i] objectForKey:@"filetype"]!=nil){
                              filetype=[[videoLibraryMovies objectAtIndex:i] objectForKey:@"filetype"];
-                             type=[[videoLibraryMovies objectAtIndex:i] objectForKey:@"type"];;
                              if ([thumbnailPath length] == 0){
                                  if ([filetype isEqualToString:@"directory"]){
                                      stringURL=@"nocover_filemode.png";
@@ -5351,6 +5347,10 @@ NSIndexPath *selected;
     [dataList beginUpdates];
     [dataList reloadRowsAtIndexPaths:[dataList indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationNone];
     [dataList endUpdates];
+    
+    [collectionView performBatchUpdates:^{
+        [collectionView reloadItemsAtIndexPaths:[collectionView indexPathsForVisibleItems]];
+    } completion:^(BOOL finished) {}];
 }
 
 -(NSComparisonResult)alphaNumericCompare:(id)firstObject secondObject:(id)secondObject{
@@ -5370,6 +5370,7 @@ NSIndexPath *selected;
 # pragma mark - Life-Cycle
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Input.OnInputFinished" object:nil userInfo:nil];
     [[NSNotificationCenter defaultCenter] removeObserver: self name:@"ECSLidingSwipeLeft" object:nil];
     [self.navigationController.navigationBar setTintColor:IOS6_BAR_TINT_COLOR];
@@ -5380,6 +5381,7 @@ NSIndexPath *selected;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     if (self.slidingViewController != nil){
         [self.navigationController.view addGestureRecognizer:self.slidingViewController.panGesture];
         self.slidingViewController.underRightViewController = nil;
@@ -5415,6 +5417,7 @@ NSIndexPath *selected;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(handleSwipeFromLeft:)
                                                  name: @"ECSLidingSwipeLeft"
@@ -5442,6 +5445,7 @@ NSIndexPath *selected;
         NSDate * now = [NSDate date];
         NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
         [outputFormatter setDateFormat:@"ss"];
+        [self updateChannelListTableCell];
         [self performSelector:@selector(startChannelListUpdateTimer) withObject:nil afterDelay:60.0f - [[outputFormatter stringFromDate:now] floatValue]];
     }
 }
@@ -6112,20 +6116,23 @@ NSIndexPath *selected;
     [self.filteredListContent removeAllObjects];
     self.richResults = nil;
     self.filteredListContent = nil;
+    self.detailItem = nil;
     [self.sections removeAllObjects];
     self.sections = nil;
     self.sectionArray = nil;
     self.sectionArrayOpen = nil;
     self.extraSectionRichResults = nil;
+    self.indexView = nil;
     dataList = nil;
     collectionView = nil;
     jsonCell = nil;
     activityIndicatorView = nil;
     nowPlaying = nil;
-    playFileViewController = nil;
+    self.playFileViewController = nil;
     self.nowPlaying = nil;
     self.webViewController = nil;
     self.showInfoViewController = nil;
+    self.detailViewController = nil;
     epgDownloadQueue = nil;
     epgDict = nil;
     [[NSNotificationCenter defaultCenter] removeObserver: self];

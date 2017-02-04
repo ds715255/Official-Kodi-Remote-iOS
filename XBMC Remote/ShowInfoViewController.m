@@ -367,10 +367,6 @@ int count=0;
     if ([methods objectForKey:@"method"]!=nil){ // THERE IS A CHILD
         NSDictionary *mainFields=[[MenuItem mainFields] objectAtIndex:choosedTab];
         NSMutableDictionary *parameters=[self indexKeyedMutableDictionaryFromArray:[[choosedMenuItem mainParameters] objectAtIndex:choosedTab]];
-        NSString *key=@"null";
-        if ([item objectForKey:[mainFields objectForKey:@"row15"]]!=nil){
-            key=[mainFields objectForKey:@"row15"];
-        }
         id obj = [NSNumber numberWithInt:[[item objectForKey:[mainFields objectForKey:@"row6"]] intValue]];
         id objKey = [mainFields objectForKey:@"row6"];
         if (movieObj!= nil && movieObjKey!=nil){
@@ -563,7 +559,7 @@ int count=0;
         float total_seconds = [endtime timeIntervalSince1970] - [starttime timeIntervalSince1970];
         float elapsed_seconds = [[NSDate date] timeIntervalSince1970] - [starttime timeIntervalSince1970];
         float percent_elapsed = (elapsed_seconds/total_seconds) * 100.0f;
-        if (percent_elapsed < 0 || percent_elapsed >= 100) {
+        if (percent_elapsed < 0) {
             itemid = [NSNumber numberWithInt:[[self.detailItem objectForKey:@"broadcastid"] intValue]];
             storeBroadcastid = itemid;
             storeChannelid = [NSNumber numberWithInteger:0];
@@ -751,7 +747,6 @@ int h=0;
     NSDictionary *item=self.detailItem;
     NSString *placeHolderImage = @"coverbox_back.png";
 //    NSLog(@"ITEM %@", item);
-    int scrollViewDefaultHeight = 1660;
     castFontSize = 14;
     size = 0;
     castWidth = 50;
@@ -837,7 +832,6 @@ int h=0;
     if ([[item objectForKey:@"family"] isEqualToString:@"episodeid"] || [[item objectForKey:@"family"] isEqualToString:@"tvshowid"]){
         int deltaY=0;
         int coverHeight=0;
-        int shiftY=40;
         CGRect frame;
         placeHolderImage = @"coverbox_back_tvshows";
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad){
@@ -853,7 +847,6 @@ int h=0;
                 if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
                     coverHeight=70;
                     deltaY=coverView.frame.size.height - coverHeight;
-                    shiftY=0;
                     jewelView.hidden=YES;
                     frame=coverView.frame;
                     frame.origin.x=0;
@@ -866,7 +859,6 @@ int h=0;
                 else {
                     coverHeight=90;
                     deltaY=coverView.frame.size.height - coverHeight;
-                    shiftY=0;
                     jewelView.hidden=YES;
                     frame=coverView.frame;
                     frame.origin.x=-78;
@@ -993,7 +985,6 @@ int h=0;
             }
             shiftParentalRating = 0;
         }
-        scrollViewDefaultHeight=scrollViewDefaultHeight - deltaY - shiftY;
         [self moveLabel:[NSArray arrayWithObjects:starsView, voteLabel, numVotesLabel, label1, label2, label3, label4, label5, label6, directorLabel, genreLabel, runtimeLabel, studioLabel, summaryLabel, parentalRatingLabelUp, parentalRatingLabel, nil] posY:deltaY];
         
         label2.text=NSLocalizedString(@"FIRST AIRED", nil);
@@ -1009,9 +1000,7 @@ int h=0;
     }
     else if ([[item objectForKey:@"family"] isEqualToString:@"albumid"]){
         
-        int shiftY = 40;
         int coverHeight = 380;
-        scrollViewDefaultHeight = 700;
         if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
             coverHeight = 290;
         }
@@ -1075,7 +1064,6 @@ int h=0;
             runtimeLabel.text = [[item objectForKey:@"genre"] length] == 0 ? @"-" : [item objectForKey:@"genre"];
         }
         studioLabel.text = [[item objectForKey:@"albumlabel"] length] == 0 ? @"-" : [item objectForKey:@"albumlabel"];
-        scrollViewDefaultHeight=scrollViewDefaultHeight - deltaY - shiftY;
         [self moveLabel:[NSArray arrayWithObjects:starsView, voteLabel, numVotesLabel, label1, label2, label3, label4, label5, label6, directorLabel, genreLabel, runtimeLabel, studioLabel, summaryLabel, parentalRatingLabelUp, parentalRatingLabel, nil] posY:deltaY];
     }
     else if ([[item objectForKey:@"family"] isEqualToString:@"artistid"]){
@@ -2102,6 +2090,7 @@ int h=0;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     alreadyPush=NO;
     self.slidingViewController.underRightViewController = nil;
     self.slidingViewController.anchorLeftPeekAmount     = 0;
@@ -2129,6 +2118,7 @@ int h=0;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver: self
                                              selector: @selector(handleSwipeFromLeft:)
                                                  name: @"ECSLidingSwipeLeft"
@@ -2164,12 +2154,14 @@ int h=0;
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver: self];
     [self.navigationController.navigationBar setTintColor:TINT_COLOR];
     toolbar.tintColor = TINT_COLOR;
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     [self alphaImage:fanartView AnimDuration:0.3 Alpha:0.0f];
     if (self.kenView != nil){
         [UIView animateWithDuration:0.3
